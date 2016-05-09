@@ -9,21 +9,19 @@ import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
 
 public class Map {
-	
-	//private Scanner m;
 	private BufferedReader br = null;
 	private FileInputStream fis = null; 
-	private String[] Map = new String[14];
-	private Image grass, wall, finish;
+	private String[] mapArray = new String[20]; // hold text file characters used in the board creation 
+	private Image grass, wall, finish; // image icons 
 	private String index, line;
 	
-	public Map(){
+	public Map() {
 			
 		loadMapImages();
 		openFile();
 		readFile();
 		closeFile();
-	}
+	} // END Map constructor 
 	
 	public Image getGrass() {
 		return grass;
@@ -36,7 +34,8 @@ public class Map {
 	public Image getFinish() {
 		return finish;
 	}
-	public void loadMapImages() {
+		
+	public void loadMapImages() { //load images that create board from res file
 		try 
 		{
 			grass = ImageIO.read(getClass().getResourceAsStream("/grass.png"));
@@ -45,44 +44,35 @@ public class Map {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+	} // END loadMapImages()
 	
-	public String getMap(int x, int y) { //video 3 at 3:45
-			if (index != null)
-				index = Map[y].substring(x, x + 1);
-			return index;
-	}
-	
-	public void openFile() {
-		try
-			{
-				//m = new Scanner(new File("//Users/gbergy/Documents/workspace/GregsMazeGame/res/maze.txt"));
-				fis = new FileInputStream("/Users/gbergy/Documents/workspace/GregsMazeGame/res/maze.txt");
-				br = new BufferedReader(new InputStreamReader(fis));   
-				line = br.readLine();
-			} catch (IOException ex) {
-		        System.out.println("error loading map OpenFile");
-		    } 
-	} // end open file 
-	
-	public void readFile() {
+	public void openFile() { // gets a text file of lines with g's and w's that will make up the maze board
 		try
 		{
-			while( (line = br.readLine() )  != null){
-                //System.out.println(line);
-				for(int i = 0; i < 13; i++) {
-					Map[i] = line;
-					System.out.println(line);
+			fis = new FileInputStream("/Users/gbergy/Documents/workspace/GregsMazeGame/res/maze.txt"); // Text File 
+			br = new BufferedReader(new InputStreamReader(fis));   
+			line = br.readLine();
+		} catch (IOException ex) {
+	        System.out.println("error loading map OpenFile");
+	    } 
+	} // END openFile() 
+	
+	public void readFile() { // read line of text file and add into mapArray
+		try
+		{
+			while( (line = br.readLine() )  != null) {
+				for(int i = 0; i < 20; i++) {
+					mapArray[i] = line;
+					System.out.println(line); // check to see if file reads correctly 
 					line = br.readLine();
 				}  
 			}
 		} catch (IOException ex) {
 		       System.out.println("error loading map readFile"); 
 		}
-	} //end readFile 
+	} // END readFile() 
 
 	public void closeFile() {
-//		if (m != null)
 		try
 		{
             fis.close();
@@ -90,5 +80,11 @@ public class Map {
 		} catch (IOException ex) {
 		    System.out.println("error loading map closeFile"); 
 		}
-	}
-} //end class Map 
+	} // END closeFile()
+	
+	public String getMap(int x, int y) { // takes full array and breaks down into individual characters, Board.java will use to the paint the maze board  
+		if (index != null)
+			index = mapArray[y].substring(x, x + 1);
+		return index;
+	} //END getMap()
+} // END Class Map.java  
